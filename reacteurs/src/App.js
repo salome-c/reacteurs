@@ -7,6 +7,7 @@ import Card from './Card'
 import GuessCount from './GuessCount'
 import HallOfFame, { FAKE_HOF } from './HallOfFame'
 import HighScoreInput from './HighScoreInput'
+import {wikidataService} from "./core/WikidataService";
 
 const SIDE = 6
 export const SYMBOLS = '😀🎉💖🎩🐶🐱🦄🐬🌍🌛🌞💫🍎🍌🍓🍐🍟🍿'
@@ -22,6 +23,10 @@ class App extends Component {
   }
 
   generateCards() {
+    wikidataService.query()
+        .then(data => console.log(data))
+        .catch(err => console.log(err));
+
     const result = []
     const size = SIDE * SIDE
     const candidates = shuffle(SYMBOLS)
