@@ -1,4 +1,4 @@
-/*import React, { Component } from 'react'
+import React, { Component } from 'react'
 import shuffle from 'lodash.shuffle'
 
 import './App.css'
@@ -107,20 +107,6 @@ class App extends Component {
       </div>
     )
   }
-}
-
-export default App
-
-
- */
-import Timer from './cachecache/Timer/index';
-
-function App() {
-  return (
-      <div className="App">
-        <Timer/>
-      </div>
-  );
 }
 
 export default App;

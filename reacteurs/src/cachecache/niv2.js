@@ -29,9 +29,9 @@ const  Niv2 = () =>{
                         <h2>Bravo vous avez trouvé !!!</h2>
                         <h3>Info</h3>
                         <p>
-                            On passe au niveau suivant
+                            Karen s'est vu offrir une émission de radio de jour à Los Angeles. Elle a décidé d'accepter, se séparant principalement de Matt pour apprendre à se pardonner.[ 72 ] Six mois plus tard, Karen a été diagnostiquée séropositive.[ 73 ] Cela faisait partie d'un plan diabolique où supervillain Mysterio, tentant de vaincre Daredevil ( et connaissant tous ses secrets ), manipula les amis de Daredevil pour le rendre fou. En effet, Mysterio a usurpé l'identité du médecin et ne savait même pas si Karen était vraiment séropositive ou non.[ 74 ] Karen est ensuite retournée au domicile de Matt à New York.[ 73 ]
                         </p>
-                        <button className="close-modal" onClick={toggleModal}>
+                        <button className="close-modal_Karen_Page_" onClick={toggleModal}>
                             <Link to="Niv3">Suivant</Link>
 
                         </button>

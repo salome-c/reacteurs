@@ -79,6 +79,22 @@ body.active-modal {
     z-index: 5;
 }
 
+.modal_hulk{
+    width: 100vw;
+    height: 120vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    z-index: 5;
+}
+
+.modal_hulk p{
+    overflow: scroll;
+    height: 70%;
+}
+
 .overlay {
     background: rgba(49,49,49,0.8);
     z-index: 5;
@@ -103,6 +119,21 @@ body.active-modal {
     top: 10px;
     right: 10px;
     padding: 5px 7px;
+    z-index: 5;
+}
+
+.close-modal_Karen_Page_{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 80px 7px;
+    z-index: 5;
+}
+.close-modal_hulk{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 250px 7px;
     z-index: 5;
 }
 
