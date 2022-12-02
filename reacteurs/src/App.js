@@ -4,6 +4,7 @@ import './App.css'
 
 import Card from './Card'
 import {wikidataService} from "./core/WikidataService";
+import {MemoryGameModal} from "./MemoryGameModal";
 
 const VISUAL_PAUSE_MSECS = 750
 
@@ -14,6 +15,7 @@ class App extends Component {
     guesses: 0,
     matchedCardIndices: [],
     data: [],
+    displayModal: false,
   }
 
   // Arrow fx for binding
@@ -55,10 +57,15 @@ class App extends Component {
     const matched = cards[newPair[0]] === cards[newPair[1]]
     this.setState({ currentPair: newPair, guesses: newGuesses })
     if (matched) {
-      this.setState({ matchedCardIndices: [...matchedCardIndices, ...newPair] })
+      this.setState({ matchedCardIndices: [...matchedCardIndices, ...newPair], displayModal: true })
     }
     setTimeout(() => this.setState({ currentPair: [] }), VISUAL_PAUSE_MSECS)
   }
+
+  handleCloseDetailClick = () => {
+    this.setState({ displayModal: false });
+  }
+
 
   componentDidMount() {
     let fetchedData = [];
@@ -67,10 +74,9 @@ class App extends Component {
         .then(() => this.setState({data: fetchedData}))
         .then(() => {
           let tab = [...this.state.data, ...this.state.data];
-          let i, j, tmp;
-          for (i = tab.length - 1; i > 0; i--) {
-            j = Math.floor(Math.random() * (i + 1));
-            tmp = tab[i];
+          for (let i = tab.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let tmp = tab[i];
             tab[i] = tab[j];
             tab[j] = tmp;
           }
@@ -80,10 +86,11 @@ class App extends Component {
   }
 
   render() {
-    const { cards, guesses } = this.state
+    const { cards, guesses, displayModal } = this.state
     // TODO : score à améliorer
     return (
       <div className="memory">
+        <h1>Trouve les paires de cartes identiques et obtiens des informations sur celles-ci</h1>
         {/* <GuessCount guesses={guesses} /> */}
         {cards.map((card, index) => (
             <Card
@@ -94,6 +101,7 @@ class App extends Component {
               onClick={this.handleCardClick}
             />
         ))}
+        {displayModal && <MemoryGameModal handleClose={this.handleCloseDetailClick}/>}
       </div>
     )
   }
