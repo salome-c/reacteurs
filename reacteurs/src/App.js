@@ -1,40 +1,26 @@
 import React, { Component } from 'react'
-import shuffle from 'lodash.shuffle'
 
 import './App.css'
 
 import Card from './Card'
-import GuessCount from './GuessCount'
-import HallOfFame, { FAKE_HOF } from './HallOfFame'
-import HighScoreInput from './HighScoreInput'
+import {wikidataService} from "./core/WikidataService";
+import {MemoryGameModal} from "./MemoryGameModal";
 
-const SIDE = 6
-export const SYMBOLS = '😀🎉💖🎩🐶🐱🦄🐬🌍🌛🌞💫🍎🍌🍓🍐🍟🍿'
 const VISUAL_PAUSE_MSECS = 750
 
 class App extends Component {
   state = {
-    cards: this.generateCards(),
+    cards: [],
     currentPair: [],
-    guesses: 0,
-    hallOfFame: null,
     matchedCardIndices: [],
-  }
-
-  generateCards() {
-    const result = []
-    const size = SIDE * SIDE
-    const candidates = shuffle(SYMBOLS)
-    while (result.length < size) {
-      const card = candidates.pop()
-      result.push(card, card)
-    }
-    return shuffle(result)
+    data: [],
+    displayModal: false,
+    currentCard: undefined
   }
 
   // Arrow fx for binding
   handleCardClick = index => {
-    const { currentPair } = this.state
+    const { currentPair, cards } = this.state
 
     if (currentPair.length === 2) {
       return
@@ -45,7 +31,8 @@ class App extends Component {
       return
     }
 
-    this.handleNewPairClosedBy(index)
+    this.handleNewPairClosedBy(index);
+    this.setState({currentCard: cards[index]});
   }
 
   getFeedbackForCard(index) {
@@ -64,46 +51,60 @@ class App extends Component {
   }
 
   handleNewPairClosedBy(index) {
-    const { cards, currentPair, guesses, matchedCardIndices } = this.state
+    const { cards, currentPair, matchedCardIndices } = this.state
 
     const newPair = [currentPair[0], index]
-    const newGuesses = guesses + 1
     const matched = cards[newPair[0]] === cards[newPair[1]]
-    this.setState({ currentPair: newPair, guesses: newGuesses })
+    this.setState({ currentPair: newPair })
     if (matched) {
-      this.setState({ matchedCardIndices: [...matchedCardIndices, ...newPair] })
+      this.setState({ matchedCardIndices: [...matchedCardIndices, ...newPair], displayModal: true })
     }
     setTimeout(() => this.setState({ currentPair: [] }), VISUAL_PAUSE_MSECS)
   }
 
-  displayHallOfFame = (hallOfFame) => {
-    this.setState({ hallOfFame })
+  handleCloseDetailClick = () => {
+    this.setState({ displayModal: false });
+  }
+
+
+  componentDidMount() {
+    let fetchedData = [];
+    wikidataService.query()
+        .then(data => data.results.bindings.forEach(el => fetchedData.push([
+          el.infection_sexuellement_transmissible.value,
+          el.infection_sexuellement_transmissibleLabel.value]
+        )))
+        .then(() => this.setState({data: fetchedData}))
+        .then(() => {
+          let tab = [...this.state.data, ...this.state.data];
+          for (let i = tab.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let tmp = tab[i];
+            tab[i] = tab[j];
+            tab[j] = tmp;
+          }
+          this.setState({cards: tab});
+        })
+        .catch(err => console.error(err));
   }
 
   render() {
-    const { cards, guesses, hallOfFame, matchedCardIndices } = this.state
-    const won = matchedCardIndices.length === cards.length
-    // TODO : score à améliorer
+    const { cards, displayModal, currentCard } = this.state
     return (
       <div className="memory">
-        <GuessCount guesses={guesses} />
+        <h1 className="text-center">Trouve les paires de cartes identiques et obtiens des informations sur celles-ci</h1>
         {cards.map((card, index) => (
             <Card
-              card={card}
-              feedback={this.getFeedbackForCard(index)}
-              index={index}
-              key={index}
-              onClick={this.handleCardClick}
+                card={card[1]}
+                feedback={this.getFeedbackForCard(index)}
+                index={index}
+                key={index}
+                onClick={this.handleCardClick}
             />
         ))}
-        {
-          won &&
-            (hallOfFame ? (
-              <HallOfFame entries={hallOfFame} />
-            ) : (
-              <HighScoreInput guesses={guesses} onStored={this.displayHallOfFame} />
-            ))
-        }
+        {displayModal && <MemoryGameModal card={currentCard} handleClose={this.handleCloseDetailClick}/>}
+        <h2>A propos</h2>
+        <p>Les données relatives aux infections sexuellement transmissibles présentes dans ce jeu proviennent de données Wikidata collectées le 1er décembre 2022 à l'aide de la requête SPARQL <a href="https://w.wiki/64E5" target="_blank">https://w.wiki/64E5</a>. En trouvant une paire de cartes identiques, vous pourrez accéder aux informations à son sujet sur Wikimedia Commons.</p>
       </div>
     )
   }
