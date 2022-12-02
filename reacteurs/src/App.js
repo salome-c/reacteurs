@@ -16,11 +16,12 @@ class App extends Component {
     matchedCardIndices: [],
     data: [],
     displayModal: false,
+    currentCard: undefined
   }
 
   // Arrow fx for binding
   handleCardClick = index => {
-    const { currentPair } = this.state
+    const { currentPair, cards } = this.state
 
     if (currentPair.length === 2) {
       return
@@ -31,7 +32,8 @@ class App extends Component {
       return
     }
 
-    this.handleNewPairClosedBy(index)
+    this.handleNewPairClosedBy(index);
+    this.setState({currentCard: cards[index]});
   }
 
   getFeedbackForCard(index) {
@@ -70,7 +72,10 @@ class App extends Component {
   componentDidMount() {
     let fetchedData = [];
     wikidataService.query()
-        .then(data => data.results.bindings.forEach(el => fetchedData.push(el.infection_sexuellement_transmissibleLabel.value)))
+        .then(data => data.results.bindings.forEach(el => fetchedData.push([
+          el.infection_sexuellement_transmissible.value,
+          el.infection_sexuellement_transmissibleLabel.value]
+        )))
         .then(() => this.setState({data: fetchedData}))
         .then(() => {
           let tab = [...this.state.data, ...this.state.data];
@@ -86,7 +91,7 @@ class App extends Component {
   }
 
   render() {
-    const { cards, guesses, displayModal } = this.state
+    const { cards, guesses, displayModal, currentCard } = this.state
     // TODO : score à améliorer
     return (
       <div className="memory">
@@ -94,14 +99,14 @@ class App extends Component {
         {/* <GuessCount guesses={guesses} /> */}
         {cards.map((card, index) => (
             <Card
-              card={card}
-              feedback={this.getFeedbackForCard(index)}
-              index={index}
-              key={index}
-              onClick={this.handleCardClick}
+                card={card[1]}
+                feedback={this.getFeedbackForCard(index)}
+                index={index}
+                key={index}
+                onClick={this.handleCardClick}
             />
         ))}
-        {displayModal && <MemoryGameModal handleClose={this.handleCloseDetailClick}/>}
+        {displayModal && <MemoryGameModal card={currentCard} handleClose={this.handleCloseDetailClick}/>}
       </div>
     )
   }
