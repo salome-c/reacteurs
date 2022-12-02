@@ -113,13 +113,12 @@ export default App
 
 
  */
-import CountdownTimer from './cachecache/CountdownTimer';
+import Timer from './cachecache/Timer/index';
 
 function App() {
   return (
       <div className="App">
-        <CountdownTimer
-            countdownTimestampMs={6000}/>
+        <Timer/>
       </div>
   );
 }

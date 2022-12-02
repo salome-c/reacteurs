@@ -1,12 +1,12 @@
 import './cacheCahce.css'
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import Niv2 from "./niv2";
-import time from "./CacheCache"
 
 
 
-const  Niv1 = () =>{
+const  Niv3 = () =>{
+
+
 
     const [modal,setModal] = useState(false)
     const toggleModalFalse = () => {
@@ -18,13 +18,10 @@ const  Niv1 = () =>{
         setModal(!modal)
     }
 
-
-
     return(
         <div>
-
-            <img className={"backgroundImage"} src={require("./image/marvel/1.png")} onClick={toggleModalFalse}/>
-            <button  onClick={toggleModal }><img src={require("./image/divalto-vipi-removebg-preview.png")}/></button>
+            <img className={"backgroundImage"} src={require("./image/marvel/3.png")} onClick={toggleModalFalse}/>
+            <button className={"Button_hulk"} onClick={toggleModal }><img className={"hulk"} src={require("./image/1176441-hulk212_02b-removebg-preview.png")}/></button>
 
             {modal && (
                 <div className="modal">
@@ -36,7 +33,7 @@ const  Niv1 = () =>{
                             On passe au niveau suivant
                         </p>
                         <button className="close-modal" onClick={toggleModal}>
-                            <Link to="Niv2">Suivant</Link>
+                            <Link to="Score">Suivant</Link>
 
                         </button>
                     </div>
@@ -51,7 +48,7 @@ const  Niv1 = () =>{
 }
 
 //<img src={require("./1.png")} alt="hello"/>
-export  default Niv1
+export  default Niv3
 
 
 
