@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import shuffle from 'lodash.shuffle'
 
 import './App.css'
 
@@ -9,32 +8,16 @@ import HallOfFame, { FAKE_HOF } from './HallOfFame'
 import HighScoreInput from './HighScoreInput'
 import {wikidataService} from "./core/WikidataService";
 
-const SIDE = 6
-export const SYMBOLS = '😀🎉💖🎩🐶🐱🦄🐬🌍🌛🌞💫🍎🍌🍓🍐🍟🍿'
 const VISUAL_PAUSE_MSECS = 750
 
 class App extends Component {
   state = {
-    cards: this.generateCards(),
+    cards: [],
     currentPair: [],
     guesses: 0,
     hallOfFame: null,
     matchedCardIndices: [],
-  }
-
-  generateCards() {
-    wikidataService.query()
-        .then(data => console.log(data))
-        .catch(err => console.log(err));
-
-    const result = []
-    const size = SIDE * SIDE
-    const candidates = shuffle(SYMBOLS)
-    while (result.length < size) {
-      const card = candidates.pop()
-      result.push(card, card)
-    }
-    return shuffle(result)
+    data: [],
   }
 
   // Arrow fx for binding
@@ -85,13 +68,32 @@ class App extends Component {
     this.setState({ hallOfFame })
   }
 
+  componentDidMount() {
+    let fetchedData = [];
+    wikidataService.query()
+        .then(data => data.results.bindings.forEach(el => fetchedData.push(el.infection_sexuellement_transmissibleLabel.value)))
+        .then(() => this.setState({data: fetchedData}))
+        .then(() => {
+          let tab = [...this.state.data, ...this.state.data];
+          let i, j, tmp;
+          for (i = tab.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            tmp = tab[i];
+            tab[i] = tab[j];
+            tab[j] = tmp;
+          }
+          this.setState({cards: tab});
+        })
+        .catch(err => console.error(err));
+  }
+
   render() {
     const { cards, guesses, hallOfFame, matchedCardIndices } = this.state
     const won = matchedCardIndices.length === cards.length
     // TODO : score à améliorer
     return (
       <div className="memory">
-        <GuessCount guesses={guesses} />
+        {/* <GuessCount guesses={guesses} /> */}
         {cards.map((card, index) => (
             <Card
               card={card}

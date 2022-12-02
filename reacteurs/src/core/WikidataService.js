@@ -2,7 +2,7 @@ class WikidataService {
     constructor( endpoint ) {
         this.endpoint = endpoint;
         this.sparqlQuery = `SELECT ?infection_sexuellement_transmissible ?infection_sexuellement_transmissibleLabel WHERE {
-          SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+          SERVICE wikibase:label { bd:serviceParam wikibase:language "fr, en, [AUTO_LANGUAGE]". }
           ?infection_sexuellement_transmissible wdt:P31 wd:Q12198.
         }
         LIMIT 100`;
