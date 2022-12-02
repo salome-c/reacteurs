@@ -8,7 +8,7 @@ export const MemoryGameModal = ({card, handleClose}) => (
                     <h5 className="modal-title">Tu as trouvé la paire : {card[1]}</h5>
                 </div>
                 <div className="modal-body">
-                    <p>Tu trouveras toutes les informations associées en suivant <a href={`${card[0]}`}>ce lien Wikidata</a></p>
+                    <p>Tu trouveras toutes les informations associées en suivant <a href={`${card[0]}`} target="_blank">ce lien Wikidata</a></p>
                 </div>
                 <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={handleClose}>OK</button>

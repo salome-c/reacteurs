@@ -12,7 +12,6 @@ class App extends Component {
   state = {
     cards: [],
     currentPair: [],
-    guesses: 0,
     matchedCardIndices: [],
     data: [],
     displayModal: false,
@@ -52,12 +51,11 @@ class App extends Component {
   }
 
   handleNewPairClosedBy(index) {
-    const { cards, currentPair, guesses, matchedCardIndices } = this.state
+    const { cards, currentPair, matchedCardIndices } = this.state
 
     const newPair = [currentPair[0], index]
-    const newGuesses = guesses + 1
     const matched = cards[newPair[0]] === cards[newPair[1]]
-    this.setState({ currentPair: newPair, guesses: newGuesses })
+    this.setState({ currentPair: newPair })
     if (matched) {
       this.setState({ matchedCardIndices: [...matchedCardIndices, ...newPair], displayModal: true })
     }
@@ -91,12 +89,10 @@ class App extends Component {
   }
 
   render() {
-    const { cards, guesses, displayModal, currentCard } = this.state
-    // TODO : score à améliorer
+    const { cards, displayModal, currentCard } = this.state
     return (
       <div className="memory">
-        <h1>Trouve les paires de cartes identiques et obtiens des informations sur celles-ci</h1>
-        {/* <GuessCount guesses={guesses} /> */}
+        <h1 className="text-center">Trouve les paires de cartes identiques et obtiens des informations sur celles-ci</h1>
         {cards.map((card, index) => (
             <Card
                 card={card[1]}
@@ -107,6 +103,8 @@ class App extends Component {
             />
         ))}
         {displayModal && <MemoryGameModal card={currentCard} handleClose={this.handleCloseDetailClick}/>}
+        <h2>A propos</h2>
+        <p>Les données relatives aux infections sexuellement transmissibles présentes dans ce jeu proviennent de données Wikidata collectées le 1er décembre 2022 à l'aide de la requête SPARQL <a href="https://w.wiki/64E5" target="_blank">https://w.wiki/64E5</a>. En trouvant une paire de cartes identiques, vous pourrez accéder aux informations à son sujet sur Wikimedia Commons.</p>
       </div>
     )
   }
