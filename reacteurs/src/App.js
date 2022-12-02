@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+/*import React, { Component } from 'react'
 import shuffle from 'lodash.shuffle'
 
 import './App.css'
@@ -110,3 +110,18 @@ class App extends Component {
 }
 
 export default App
+
+
+ */
+import CountdownTimer from './cachecache/CountdownTimer';
+
+function App() {
+  return (
+      <div className="App">
+        <CountdownTimer
+            countdownTimestampMs={6000}/>
+      </div>
+  );
+}
+
+export default App;
