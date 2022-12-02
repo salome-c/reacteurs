@@ -3,9 +3,6 @@ import React, { Component } from 'react'
 import './App.css'
 
 import Card from './Card'
-import GuessCount from './GuessCount'
-import HallOfFame, { FAKE_HOF } from './HallOfFame'
-import HighScoreInput from './HighScoreInput'
 import {wikidataService} from "./core/WikidataService";
 
 const VISUAL_PAUSE_MSECS = 750
@@ -15,7 +12,6 @@ class App extends Component {
     cards: [],
     currentPair: [],
     guesses: 0,
-    hallOfFame: null,
     matchedCardIndices: [],
     data: [],
   }
@@ -64,10 +60,6 @@ class App extends Component {
     setTimeout(() => this.setState({ currentPair: [] }), VISUAL_PAUSE_MSECS)
   }
 
-  displayHallOfFame = (hallOfFame) => {
-    this.setState({ hallOfFame })
-  }
-
   componentDidMount() {
     let fetchedData = [];
     wikidataService.query()
@@ -88,8 +80,7 @@ class App extends Component {
   }
 
   render() {
-    const { cards, guesses, hallOfFame, matchedCardIndices } = this.state
-    const won = matchedCardIndices.length === cards.length
+    const { cards, guesses } = this.state
     // TODO : score à améliorer
     return (
       <div className="memory">
@@ -103,14 +94,6 @@ class App extends Component {
               onClick={this.handleCardClick}
             />
         ))}
-        {
-          won &&
-            (hallOfFame ? (
-              <HallOfFame entries={hallOfFame} />
-            ) : (
-              <HighScoreInput guesses={guesses} onStored={this.displayHallOfFame} />
-            ))
-        }
       </div>
     )
   }
